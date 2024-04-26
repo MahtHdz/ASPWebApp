@@ -4,13 +4,26 @@ services:
   mssql:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      ACCEPT_EULA: 'Y'
-      SA_PASSWORD: 'YourStrong(!Passw0rd)'
+      ACCEPT_EULA: ${ACCEPT_EULA}
+      MSSQL_SA_PASSWORD: '${MSSQL_SA_PASSWORD}'
+    expose:
+      - "1433"
     ports:
       - "1433:1433"
     volumes:
       - mssql_data:/var/opt/mssql
-
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    expose:
+      - "8978"
+    ports:
+      - "8081:8978"
+    volumes:
+      - cloudbeaver_data:/opt/cloudbeaver/workspace
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 volumes:
   mssql_data:
+    driver: local
+  cloudbeaver_data:
     driver: local
